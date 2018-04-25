@@ -171,11 +171,11 @@ app.use(function(err, req, res, next) {
 });
 
 // module.exports = app;
-  app.set('port', process.env.PORT || 3001)
+  app.set('port', process.env.PORT || 3001);
 
   app.listen(app.get('port'), () => {
     console.log(`✅ PORT: ${app.get('port')} 🌟`)
-  })
+  });
 
 // let dbs = mongoose.connection;
 // dbs.on('error', console.error.bind(console, 'MongoDB connection error:'));
