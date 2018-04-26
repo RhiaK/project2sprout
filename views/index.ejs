@@ -4,19 +4,20 @@
   	<meta charset="UTF-8">
   	<meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Sprout</title>
+    <link href="https://fonts.googleapis.com/css?family=Slabo+27px" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel='stylesheet' href='/stylesheets/style.css'>
   </head>
   <body>
-    <header>
-    <h1>Sprout</h1>
+    <header class="nopadding">
+      <h1>Sprout</h1>
     </header>
     <div class="container">
       <div class="row">
         <!--split button -->
         <div class="btn-group">
-          <button type="button" class="btn btn-success">Location</button>
-            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <button type="button" class="btn btn-success button">Location</button>
+            <button type="button" class="btn btn-success dropdown-toggle button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <span class="sr-only">Toggle Dropdown</span>
           </button>
           <div class="dropdown-menu">
@@ -26,6 +27,11 @@
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="#">New Location</a>
          </div>
+         <!--submit button-->
+         <div class="col-12 arrived">
+          <div class="btn-group">
+            <button type="button" class="btn btn-success button">Arrived!</button>
+          </div>
         </div>
       </div>
   	</div>

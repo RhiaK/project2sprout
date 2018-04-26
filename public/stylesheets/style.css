@@ -1,8 +1,32 @@
 body {
   padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font-family: 'Slabo 27px', serif;
+  background-color: rgb(255, 245, 216);
+  background-image: url('/images/sprout.png');
+  text-align: center;
+}
+
+header {
+	text-align: center;
+	background-color: rgb(145, 170, 104);
+	width: 100%;
+	position: fixed;
+	color: rgb(255, 245, 216);
+	top: 0;
+	left: 0;
+
+}
+
+.button {
+	margin-top: 50px;
+	background-color: rgb(145, 170, 104);
+	color: rgb(255, 245, 216);
 }
 
 a {
   color: #00B7FF;
+}
+
+.nopadding {
+	padding: 0;
 }

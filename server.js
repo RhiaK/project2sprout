@@ -53,7 +53,7 @@ app.use('/users', usersRouter);
 //   next(createError(404));
 // });
 
-app.get('/', function (req, res) {
+app.get('/index', function (req, res) {
   db.User.find({}, function(err, allUsers){
     if(allUsers){
       res.render('index.ejs', { users: allUsers });
@@ -67,22 +67,6 @@ app.get('/signup', (req, res) => {
 	res.render('signup');
 });
 
-// const saltRounds = 10;
-
-// //signup
-// app.post('/signup', (req, res) => {
-// let user = req.body.username;
-
-// //create password
-// bcrypt.hash(req.body.password, saltRounds, function(err, hash){
-// 	let user = new User({username: username, passwordDigest: hash});
-// 	user.save().then(() => {
-// 		console.log ("New user created ", username);
-// 		req.session.user = user;
-// 		res.redirect('/index');
-// 	});
-// 	});
-// });
 
 app.post('/users', function (req, res) {
   // use the email and password to authenticate here
