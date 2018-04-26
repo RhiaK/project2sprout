@@ -1,4 +1,5 @@
 app-env.js
+env.js
 # Logs
 logs
 *.log

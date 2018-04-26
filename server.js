@@ -11,8 +11,22 @@ const session = require('express-session');
 // const MongoStore = require('connect-mongo')(session);
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+//so that I can store twilio info in .env folder in gitignore
+const dotenv = require("dotenv");
+const { error } = dotenv.config();
+if (error) {
+  throw error
+}
 
 const app = express();
+
+// Twilio Credentials
+// const twilioLogin = ('.env');
+// const accountSid = ('.env');
+// const authToken = ('.env');
+
+// require the Twilio module and create a REST client
+const client = require('twilio')(dotenv.TWILIO_ACCOUNT_SID, dotenv.TWILIO_AUTH_TOKEN);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -157,6 +171,15 @@ app.get('/logout', (req,res) => {
 // 		return res.status(200).send('Welcome to the protected area');
 // 	}	
 // });
+
+//twilio send message
+client.messages
+  .create({
+    to: '+17193298921',
+    from: '+17197223736',
+    body: 'Your child has arrived!',
+  })
+  .then(message => console.log(message.sid));
 
 
 // error handler
