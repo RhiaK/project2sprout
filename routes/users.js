@@ -8,21 +8,22 @@ if (process.env.NODE_ENV == "production") {
   mongoose.connect("mongodb://localhost/sprout");
 }
 
+const saltFactor = 10;
 const bcrypt = require('bcrypt');
 const Schema = mongoose.Schema;
 var UserSchema = new Schema({
-  email: String,
-  passwordDigest: String,
-  cName: String,
-  ppPhone: Number
+  email: {type: String, required: true},
+  passwordDigest: {type: String, required: true},
+  cName: {type: String, required: true},
+  ppPhone: {type: Number, required: true}
 });
 
 //creating secure password
 UserSchema.statics.createSecure = function(email, password, callback){
   let UserModel = this;
-  bcrypt.genSalt(function(err, salt){
+  bcrypt.genSalt(saltFactor, function(err, salt){
     console.log("salt is: ", salt);
-    bcrypt.hash(password, salt, function(err, hashPassword){
+    bcrypt.hash(passwordDigest, salt, function(err, hashPassword){
       UserModel.create({
         email : email,
         passwordDigest : hashPassword
