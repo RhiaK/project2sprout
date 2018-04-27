@@ -102,7 +102,7 @@ app.post('/signup', function (req, res) {
 });
 //login
 app.post('/login', function (req, res) {
-  db.User.authenticate(req.body.email, req.body.password, function (err, returningUser) {
+  db.User.authenticate(req.body.email, req.body.passwordDigest, function (err, returningUser) {
     if (err) {
       console.log("index error: " + err);
           res.sendStatus(500);
