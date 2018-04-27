@@ -35,9 +35,9 @@ app.use('/users', usersRouter);
 
 //create sessions
 app.use(session({
-	secret: "Trent is Sprout",
   saveUnitialized: true,
   resave: true,
+	secret: "TrentisaSprout",
   cookie: {maxAge:14*24*60*60*1000}
 	// store: new MongoStore({url: 'mongodb://localhost/sprout'})
 }));
