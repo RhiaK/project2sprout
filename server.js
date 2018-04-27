@@ -52,8 +52,11 @@ app.use('/users', usersRouter);
 // app.use(function(req, res, next) {
 //   next(createError(404));
 // });
+app.get('/', (req, res) => {
+  res.render('index');
+});
 
-app.get('/index', function (req, res) {
+app.get('/', function (req, res) {
   db.User.find({}, function(err, allUsers){
     if(allUsers){
       res.render('index.ejs', { users: allUsers });
@@ -157,13 +160,13 @@ app.get('/logout', (req,res) => {
 // });
 
 //twilio send message
-client.messages
-  .create({
-    to: '+17193298921',
-    from: '+17197223736',
-    body: 'Your child has arrived!',
-  })
-  .then(message => console.log(message.sid));
+// client.messages
+//   .create({
+//     to: '+17193298921',
+//     from: '+17197223736',
+//     body: 'Your child has arrived!',
+//   })
+//   .then(message => console.log(message.sid));
 
 
 // error handler

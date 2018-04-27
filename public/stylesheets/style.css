@@ -39,6 +39,21 @@ h3 {
 	font-size: 27px;
 }
 
+.mbutt {
+	background-color: rgba(158, 215, 56, 0.8);
+	color: #55322C;
+}
+
+.cbutt {
+	background-color: #55322C;
+	color: rgba(158, 215, 56, 0.8);	
+}
+
+.mbody {
+	background color: rgb(255, 245, 216);
+	color: #55322C;
+}
+
 a {
   color: #00B7FF;
 }

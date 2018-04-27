@@ -18,6 +18,7 @@ $(document).ready(function(){
   	 	$.post('/login', loginData, function(response){
     	console.log(response);
   		});
+
 });
 
 
