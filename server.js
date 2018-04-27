@@ -90,6 +90,7 @@ app.post('/signup', function (req, res) {
   User.createSecure(req.body.email, req.body.password, function(err, newUser) {
     console.log(req.body.email);
     console.log(req.body.password);
+    console.log("this is the signup");
     if (err) {
       console.log("index error: " + err);
           res.sendStatus(500);
