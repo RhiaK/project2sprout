@@ -33,69 +33,87 @@ app.use(bodyParser.json());
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-// //create sessions using connect-mongo
-// app.use(session({
-// 	secret: "Trent is Sprout",
-// 	// store: new MongoStore({url: 'mongodb://localhost/sprout'})
-// }));
+//create sessions
+app.use(session({
+	secret: "Trent is Sprout",
+  saveUnitialized: true,
+  resave: true,
+  cookie: {maxAge:14*24*60*60*1000}
+	// store: new MongoStore({url: 'mongodb://localhost/sprout'})
+}));
 // catch 404 and forward to error handler
 // app.use(function(req, res, next) {
 //   next(createError(404));
 // });
+// app.get('/', (req, res) => {
+//   res.render('index');
+// });
+
+
+
+// app.get('/', function (req, res) {
+//   db.User.find({}, function(err, allUsers){
+//     if(allUsers){
+//       res.render('index.ejs', { users: allUsers });
+//     } else {
+//       res.status(500).send('server error');
+//     }
+//   });
+// });
+
+
+//index
 app.get('/', (req, res) => {
   res.render('index');
-});
-
-app.get('/', function (req, res) {
-  db.User.find({}, function(err, allUsers){
-    if(allUsers){
-      res.render('index.ejs', { users: allUsers });
-    } else {
-      res.status(500).send('server error');
-    }
-  });
 });
 //show signup
 app.get('/signup', (req, res) => {
 	res.render('signup');
 });
-
-
-app.post('/users', function (req, res) {
-  // use the email and password to authenticate here
-  db.User.createSecure(req.body.email, req.body.password, function (err, newUser) {
-  	req.session.userID = newUser._id;
-    res.json(user);
-    res.redirect('/profile');
-  });
-});
-
+//show login
 app.get('/login', (req, res) => {
 	res.render('login');
 });
-// //sign in
-// app.post('/signup', (req, res) => {
-// 	let username = req.body.username;
-// 	let enteredPassword = req.body.password;
-// 	User.findOne({username: username}, function(err, user){
-// 		if(user) {
-// 			bcrypt.compare(enteredPassword, user.passwordDigest, (err, result) => {
-// 				if(err) {
-// 					console.log("Incorrect password!!");
-// 				}
-// 				if(result) {
-// 					console.log("Logged In!");
-// 					req.session.user = user;
-// 					res.redirect('/profile');
-// 				}
-// 			});
-// 		if(err) {
-// 			console.log(err);
-// 			res.redirect('/');
-// 		}	
-// 		}
-// 	});
+//show profile
+app.get('/profile', (req, res) => {
+  res.render('profile');
+});
+
+// app.post('/users', function (req, res) {
+//   // use the email and password to authenticate here
+//   db.User.createSecure(req.body.email, req.body.password, function (err, newUser) {
+//     req.session.userID = newUser._id;
+//     res.json(user);
+//     res.redirect('/profile');
+//   });
 // });
+
+//creating user 
+app.post('/signup', function (req, res) {
+  User.createSecure(req.body.email, req.body.password, function(err, newUser) {
+    console.log(req.body.email);
+    console.log(req.body.password);
+    if (err) {
+      console.log("index error: " + err);
+          res.sendStatus(500);
+    } else {
+      req.session.userId = newUser.id;
+      res.json(newUser);
+    }
+  });
+});
+//login
+app.post('/login', function (req, res) {
+  User.authenticate(req.body.email, req.body.password, function (err, returningUser) {
+    if (err) {
+      console.log("index error: " + err);
+          res.sendStatus(500);
+    } else {
+      req.session.userId = returningUser.id;
+      res.json(returningUser);
+    }
+  });
+});
 
 //use session
 app.post('/sessions', (req, res) => {
@@ -118,7 +136,7 @@ app.get('/profile', function (req, res) {
 		if (err){
 			res.redirect('/login');
 		} else {
-			res.render ('user-show.ejs', {user:currentUSer});
+			res.render ('profile', {user:currentUser});
 		}
 	});
 });

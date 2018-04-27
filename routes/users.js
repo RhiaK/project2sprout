@@ -1,40 +1,55 @@
-var express = require('express');
-var router = express.Router();
-const db = require('../models');
+const mongoose = require('mongoose');
+if (process.env.NODE_ENV == "production") {
+  console.log("connecting to... " + process.env.NODE_ENV)
+  console.log("also connecting to mlab  " + process.env.MLAB_URL)
+  mongoose.connect(process.env.MLAB_URL)
+} else {
+  console.log("this is local ")
+  mongoose.connect("mongodb://localhost/sprout");
+}
 
-
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+const bcrypt = require('bcrypt');
+const Schema = mongoose.Schema;
+var UserSchema = new Schema({
+  email: String,
+  passwordDigest: String,
+  cName: String,
+  ppPhone: Number
 });
 
-// create a new user with a hashed password
-db.User.statics.createSecure = function (email, password, callback) {
-  var UserModel = this;
-  bcrypt.genSalt(function (err, salt) {
-  console.log('salt: ', salt);  
-    bcrypt.hash(password, salt, function (err, hash) {
-
+//creating secure password
+UserSchema.statics.createSecure = function(email, password, callback){
+  let UserModel = this;
+  bcrypt.genSalt(function(err, salt){
+    console.log("salt is: ", salt);
+    bcrypt.hash(password, salt, function(err, hashPassword){
       UserModel.create({
-        email: email,
-        passwordDigest: hash
+        email : email,
+        passwordDigest : hashPassword
       }, callback);
     });
   });
 };
 
-//authenticate user
-db.User.statics.authenticate = function (email, password, callback) {
-	this.findOne({email: email}, function (err, foundUser) {
-		console.log(foundUser);
-		if (!foundUser) {
-			console.log('No user with email ' + email);
-		} else if (foundUser.checkPassword(password)) {
-			callback (null, foundUser);
-		} else {
-			callback('Error: incorrect password', null);
-		}
-	});
+UserSchema.methods.checkPassword = function(password) {
+  return bcrypt.compareSync(password, this.passwordDigest)
 };
 
-module.exports = router;
+//authenticate login
+UserSchema.statics.authenticate = function (email, password, callback) {
+  this.findOne({email: email}, function (err, returningUser) { 
+    console.log(returningUser);
+    if (!returningUser) {
+      console.log('There is no user with the email ' + email);
+      callback("No user found with that email", null); 
+    } else if (returningUser.checkPassword(password)) { 
+      callback(null, returningUser);
+    } else {
+      callback("Incorrect password! Please try again.", null);
+    }
+  });
+};
+
+var User = mongoose.model('User', UserSchema);
+
+module.exports = User;
