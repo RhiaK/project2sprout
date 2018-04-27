@@ -1,59 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-  	<meta charset="UTF-8">
-  	<meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sprout</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/css?family=Slabo+27px" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
     <link rel='stylesheet' href='/stylesheets/style.css'>
+    <title>Sprout</title>
   </head>
   <body>
-    <header class="nopadding">
-      <h1>Sprout</h1>
+    <header>
+    <h1>Sprout</h1>
     </header>
     <div class="container">
       <div class="row justify-content-center">
-        <!--dropdown button -->
-         <div class="btn-group">
-          <button type="button" class="btn btn-success dropdown-toggle button margin" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Location</button>
-          <div class="dropdown-menu">
-          <a class="dropdown-item" href="#">School</a>
-          <a class="dropdown-item" href="#">Parkour</a>
-          <a class="dropdown-item" href="#">Nathan's House</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item"  data-toggle="modal" data-target=".modal" href="#">Add New Location</a>
-        </div>
+        <p>Already have an account?</br><a href="/login">Login</a></p>
+        <p>Don't have an account yet?</br><a href="/signup">Signup</a></p>
       </div>
-      <div class="modal mbody" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Add a Location</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-          <div class="modal-body">
-            <form>
-              <input type="text" name="location" class="form-control newlocn" placeholder="Location Name" autofocus>
-              <input type="text" name="location" class="form-control newloca" placeholder="Location Address" autofocus>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary mbutt">Save New Location</button>
-            <button type="button" class="btn btn-secondary cbutt" data-dismiss="modal">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
-      <!--submit button-->
-    <div class="col-12 arrived">
-      <div class="btn-group">
-        <button type="button" class="btn btn-success button bbutton margin">Arrived!</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  	</div>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>

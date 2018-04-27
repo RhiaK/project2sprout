@@ -5,13 +5,18 @@ console.log("yea!");
 		e.preventDefault();
 		  var signupData = {
         email: $("#email-input").val(),
-        password: $('#password-input').val(),
+        passwordDigest: $('#password-input').val(),
         child: $('#childName-input').val(),
         ppphone: $('#ppphone-input').val()
-      }
+      };
         console.log(signupData);
-  	 	$.post('/signup', signupData, function(response){
-  		});
+  	 	$.ajax({
+        method: 'POST',
+        url: '/signup',
+        data: signupData,
+        success: signupSuccess,
+        error: signupError
+      });
 	});
 //login
 	$("#login-form").on("submit", function(e){
@@ -19,68 +24,36 @@ console.log("yea!");
 		  var loginData = {
         email: $("#email-input").val(),
         password: $('#password-input').val(),
-      }
+      };
   			console.log(loginData);
-  	 	$.post('/login', loginData, function(response){
-  		});
+  	 	$.ajax({
+        method: "POST",
+        url: "/login",
+        data: loginData,
+        success: loginSuccess,
+        error: loginError
+      });
+    });  
+
 
     //signup success function
-    function signUpSuccess () {
+    function signupSuccess () {
       window.location.href = '/profile';
     }
 
     //signup error function
-    function signUpError () {
-      console.log('Please try again');
+    function signupError () {
+      alert('Error, please try again');
     }
 
     //login success function
-    function logInSuccess () {
+    function loginSuccess () {
       window.location.href = '/profile';
     }
 
     //login error function 
-    function logInError () {
-      console.log('error logging in, please try again')
+    function loginError () {
+      alert('Error logging in, please try again')
     }
-
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 });

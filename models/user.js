@@ -13,20 +13,26 @@ const bcrypt = require('bcrypt');
 const Schema = mongoose.Schema;
 var UserSchema = new Schema({
   email: {type: String, required: true},
-  passwordDigest: {type: String, required: true},
-  cName: {type: String, required: true},
-  ppPhone: {type: Number, required: true}
+  password: {type: String, required: true},
+  child: {type: String, required: true},
+  ppphone: {type: Number, required: true}
 });
 
 //creating secure password
-UserSchema.statics.createSecure = function(email, password, callback){
+UserSchema.statics.createSecure = function(email, password, child, ppphone, callback){
   let UserModel = this;
   bcrypt.genSalt(saltFactor, function(err, salt){
     console.log("salt is: ", salt);
-    bcrypt.hash(passwordDigest, salt, function(err, hashPassword){
+    bcrypt.hash(password, salt, function(err, hashPassword){
+
+      // this is where we are creating the new mongo document. create is a mongoose function.
+      // we're passing in email, encrypted password, child and ppphone into the new document
+      // so that it matches the schema
       UserModel.create({
         email : email,
-        passwordDigest : hashPassword
+        password : hashPassword,
+        child: child,
+        ppphone: ppphone
       }, callback);
     });
   });

@@ -87,9 +87,9 @@ app.get('/profile', (req, res) => {
 
 //creating user 
 app.post('/signup', function (req, res) {
-  User.createSecure(req.body.email, req.body.password, function(err, newUser) {
+  db.User.createSecure(req.body.email, req.body.passwordDigest, req.body.child, req.body.ppphone, function(err, newUser) {
     console.log(req.body.email);
-    console.log(req.body.password);
+    console.log(req.body.passwordDigest);
     console.log("this is the signup");
     if (err) {
       console.log("index error: " + err);
@@ -102,7 +102,7 @@ app.post('/signup', function (req, res) {
 });
 //login
 app.post('/login', function (req, res) {
-  User.authenticate(req.body.email, req.body.password, function (err, returningUser) {
+  db.User.authenticate(req.body.email, req.body.password, function (err, returningUser) {
     if (err) {
       console.log("index error: " + err);
           res.sendStatus(500);
