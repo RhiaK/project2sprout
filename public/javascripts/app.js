@@ -7,7 +7,6 @@ $(document).ready(function(){
 		  var signupData = $("#signup-form").serialize();
   			console.log(signupData);
   	 	$.post('/users', signupData, function(response){
-    	console.log(response);
   		});
 	});
 //login
@@ -16,7 +15,6 @@ $(document).ready(function(){
 		  var loginData = $("#login-form").serialize();
   			console.log(loginData);
   	 	$.post('/login', loginData, function(response){
-    	console.log(response);
   		});
 
 });

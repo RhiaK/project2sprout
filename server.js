@@ -26,7 +26,7 @@ const app = express();
 // const authToken = ('.env');
 
 // require the Twilio module and create a REST client
-const client = require('twilio')(dotenv.TWILIO_ACCOUNT_SID, dotenv.TWILIO_AUTH_TOKEN);
+const client = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
