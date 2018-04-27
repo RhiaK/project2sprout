@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const db = require('./models');
-var user = require('User');
+
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -9,7 +9,7 @@ router.get('/', function(req, res, next) {
 });
 
 // create a new user with a hashed password
-db.user.statics.createSecure = function (email, password, callback) {
+db.User.statics.createSecure = function (email, password, callback) {
   var UserModel = this;
   bcrypt.genSalt(function (err, salt) {
   console.log('salt: ', salt);  
@@ -24,7 +24,7 @@ db.user.statics.createSecure = function (email, password, callback) {
 };
 
 //authenticate user
-db.user.statics.authenticate = function (email, password, callback) {
+db.User.statics.authenticate = function (email, password, callback) {
 	this.findOne({email: email}, function (err, foundUser) {
 		console.log(foundUser);
 		if (!foundUser) {
