@@ -9,8 +9,6 @@ const db = require('./models');
 const mongoose = require('mongoose');
 const session = require('express-session');
 // const MongoStore = require('connect-mongo')(session);
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
 require('dotenv').config({silent: true})
 
 const app = express();
