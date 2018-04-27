@@ -11,19 +11,9 @@ const session = require('express-session');
 // const MongoStore = require('connect-mongo')(session);
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
-//so that I can store twilio info in .env folder in gitignore
-const dotenv = require("dotenv");
-const { error } = dotenv.config();
-if (error) {
-  throw error
-}
+require('dotenv').config({silent: true})
 
 const app = express();
-
-// Twilio Credentials
-// const twilioLogin = ('.env');
-// const accountSid = ('.env');
-// const authToken = ('.env');
 
 // require the Twilio module and create a REST client
 const client = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
