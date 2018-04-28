@@ -17,11 +17,9 @@
       <div class="row justify-content-center">
         <!--dropdown button -->
          <div class="btn-group">
-          <button type="button" class="btn btn-success dropdown-toggle button margin" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Location</button>
-          <div class="dropdown-menu">
-          <a class="dropdown-item" data-toggle="modal" data-target=".crud" href="#">School</a>
-          <a class="dropdown-item" data-toggle="modal" data-target=".crud" href="#">Parkour</a>
-          <a class="dropdown-item" data-toggle="modal" data-target=".crud" href="#">Nathan's House</a>
+          <button id="newLoc" type="button" class="btn btn-success dropdown-toggle button margin" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Location</button>
+          <div class="dropdown-menu" id="target">
+          <!--this is where new loc data should appear-->
           <div class="dropdown-divider"></div>
           <a class="dropdown-item"  data-toggle="modal" data-target=".mbody" href="#">Add New Location</a>
         </div>
@@ -41,8 +39,8 @@
           </div>
           <div class="modal-footer">
             <button type="button" id="selectB" class="btn btn-primary mbutt">Select</button>
-            <button type="button" id="updateB" class="btn btn-primary cbutt">Update</button>
-            <button type="button" class="btn btn-secondary cbutt" id="deleteB" data-dismiss="modal">Delete</button>
+            <button type="button" id="updateB" class="btn btn-primary cbutt updateBtn">Update</button>
+            <button type="button" class="btn btn-secondary cbutt deleteBtn" id="deleteB" data-dismiss="modal">Delete</button>
           </div>
         </div>
       </div>
@@ -58,7 +56,7 @@
             </div>
           <div class="modal-body">
             <form>
-              <input type="text" name="location" class="form-control newlocn" placeholder="Location" autofocus>
+              <input type="text" name="location" class="form-control newloc" placeholder="Location" autofocus>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-primary mbutt">Save New Location</button>

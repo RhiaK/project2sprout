@@ -8,6 +8,8 @@ const bodyParser = require('body-parser');
 const db = require('./models');
 const mongoose = require('mongoose');
 const session = require('express-session');
+const User = require('./models/user');
+const Loc = require('./models/loc');
 // const MongoStore = require('connect-mongo')(session);
 require('dotenv').config({silent: true})
 
@@ -75,6 +77,10 @@ app.get('/profile', (req, res) => {
   res.render('profile');
 });
 
+app.get('/profile/loc', (req, res) => {
+  res.render('loc');
+});
+
 // app.post('/users', function (req, res) {
 //   // use the email and password to authenticate here
 //   db.User.createSecure(req.body.email, req.body.password, function (err, newUser) {
@@ -138,13 +144,66 @@ app.get('/profile', function (req, res) {
 	});
 });
 
-//session expiration
-// app.use(session({
-// 	store: new MongoStore({
-// 		url: 'mongodb://localhost/sprout',
-// 		ttl: 14 * 24 * 60 * 60 //2 week, default
-// 	})
-// }));
+//this route works with my ajax get to display the seeded data on the dom
+app.get('profile/:id/loc', function (req, res, next) {
+    console.log('hello') 
+    db.Loc.find(function(err, loc) {
+      if (err) {
+      console.log("index error: " + err);
+        res.sendStatus(500);
+      } else {
+        res.json(loc);
+      }  
+    });
+});
+
+//create new location
+app.post('/profile/:id/locs', function(req, res) {
+  // create new loc with form data (`req.body`)
+  var newLoc = req.body;
+    db.User.create(newLoc, function(err, newLocItem){
+      if (err) {
+        console.log("index error: " + err)
+        res.sendStatus(500)  
+      } else {
+      //executed only in the success case, where there's no error
+        res.json(newLocItem);  
+      }
+    });
+});
+
+// // delete loc
+// app.delete('/profile/:id/loc/:id', function (req, res) {
+//   // get to do id from url params (`req.params`)
+//   let locToDelete = req.params.id;
+//   db.Loc.findOneAndRemove({_id: req.params.id}, function(err, locs) {
+//     if (err) {
+//       console.log("index error: " + err);
+//       res.sendStatus(500);
+//     }
+//     // get the id of the to do to delete
+//     res.json(locToDelete);
+//   });
+// })
+
+// // update loc list item
+// app.put('/profile/:id/loc/:id', function(req,res){
+//   console.log(req.params.id);
+//   let loc1 = req.body.loc1;
+//   console.log(loc1);
+
+//   db.User.findOneAndUpdate(
+//       {_id: req.params.id}, {$set:{loc: loc1}}, {new: true}, function (err, update) {
+//         if (err) {
+//       console.log("index error: " + err);
+//       res.sendStatus(500);
+//         } else {
+//       //doc is the json object that is being sent (refer to 'json' callback in JS functions)
+//       console.log(update);
+//       res.json(update);
+//       }
+//   });
+// });
 
 //logout
 app.get('/logout', (req,res) => {

@@ -11,11 +11,16 @@ if (process.env.NODE_ENV == "production") {
 const saltFactor = 10;
 const bcrypt = require('bcrypt');
 const Schema = mongoose.Schema;
+
+var LocSchema = new Schema({
+  loc: {type: String}
+});
 var UserSchema = new Schema({
   email: {type: String, required: true},
   password: {type: String, required: true},
   child: {type: String, required: true},
-  ppphone: {type: Number, required: true}
+  ppphone: {type: Number, required: true},
+  loc: [LocSchema]
 });
 
 //creating secure password
@@ -58,5 +63,7 @@ UserSchema.statics.authenticate = function (email, password, callback) {
 };
 
 var User = mongoose.model('User', UserSchema);
+var Loc = mongoose.model('Loc', LocSchema);
 
 module.exports = User;
+// module.exports = Loc;
