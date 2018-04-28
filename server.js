@@ -85,7 +85,7 @@ app.get('/profile', (req, res) => {
 //   });
 // });
 
-//creating user 
+//create user 
 app.post('/signup', function (req, res) {
   db.User.createSecure(req.body.email, req.body.passwordDigest, req.body.child, req.body.ppphone, function(err, newUser) {
     console.log(req.body.email);
@@ -113,20 +113,20 @@ app.post('/login', function (req, res) {
   });
 });
 
-//use session
-app.post('/sessions', (req, res) => {
-	db.User.authenticate(req.body.email, req.body.passwordDigest, function (err, loggedInUser) {
-		if (err) {
-		console.log('authentication error: ', err);
-		res.status(500).send();
-		} else {
-		console.log('setting session user id ', loggedInUser._id);
-		req.session.userId = loggedInUser._id;
-		res.redirect('/profile');
-		}
+// //use session
+// app.post('/sessions', (req, res) => {
+// 	db.User.authenticate(req.body.email, req.body.passwordDigest, function (err, loggedInUser) {
+// 		if (err) {
+// 		console.log('authentication error: ', err);
+// 		res.status(500).send();
+// 		} else {
+// 		console.log('setting session user id ', loggedInUser._id);
+// 		req.session.userId = loggedInUser._id;
+// 		res.redirect('/profile');
+// 		}
 			
-	});
-});
+// 	});
+// });
 
 //profile
 app.get('/profile', function (req, res) {
