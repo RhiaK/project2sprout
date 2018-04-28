@@ -27,8 +27,8 @@ console.log("yea!");
       };
   			console.log(loginData);
   	 	$.ajax({
-        method: "POST",
-        url: "/login",
+        method: 'POST',
+        url: '/login',
         data: loginData,
         success: loginSuccess,
         error: loginError

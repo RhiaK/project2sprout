@@ -39,7 +39,7 @@ UserSchema.statics.createSecure = function(email, password, child, ppphone, call
 };
 
 UserSchema.methods.checkPassword = function(password) {
-  return bcrypt.compareSync(password, this.passwordDigest)
+  return bcrypt.compareSync(password, this.password)
 };
 
 //authenticate login

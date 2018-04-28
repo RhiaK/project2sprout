@@ -32,10 +32,9 @@ app.use(bodyParser.json());
 
 //create sessions
 app.use(session({
-  saveUnitialized: true,
   resave: true,
-	secret: "TrentisaSprout",
-  cookie: {maxAge:14*24*60*60*1000}
+  secret: "TrentisaSprout",
+  saveUninitialized: true,
 	// store: new MongoStore({url: 'mongodb://localhost/sprout'})
 }));
 // catch 404 and forward to error handler
