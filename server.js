@@ -164,14 +164,20 @@ app.get('/logout', (req,res) => {
 // 	}	
 // });
 
+
 //twilio send message
-// client.messages
-//   .create({
-//     to: '+17193298921',
-//     from: '+17197223736',
-//     body: 'Your child has arrived!',
-//   })
-//   .then(message => console.log(message.sid));
+function send() {
+  let phone = db.User.ppphone;
+  let msg = (db.User.name + " has arrived at " + db.User.loc)
+
+client.messages
+  .create({
+    to: phone,
+    from: '+17197223736',
+    body: msg
+  })
+  .then(message => console.log(message.sid));
+};
 
 
 // error handler

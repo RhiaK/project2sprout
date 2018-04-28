@@ -55,5 +55,23 @@ console.log("yea!");
     function loginError () {
       alert('Error logging in, please try again')
     }
+//send text message
+  $("#arrived").on("submit", function(e){
+    e.preventDefault();
+    //twilio send message
+      let msgData = {
+        name: './models/user/name',
+        loc: './models/user/loc'
+      }
+    $.ajax({
+      method: 'POST',
+      url: '/msg',
+      data: msgData,
+      success: msgSuccess,
+      error: msgError
+      });
+
+  })
+
 
 });
