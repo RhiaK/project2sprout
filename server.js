@@ -93,7 +93,7 @@ app.post('/signup', function (req, res) {
     console.log("this is the signup");
     if (err) {
       console.log("index error: " + err);
-          res.sendStatus(500);
+      res.sendStatus(500);
     } else {
       req.session.userId = newUser.id;
       res.json(newUser);
@@ -105,7 +105,7 @@ app.post('/login', function (req, res) {
   db.User.authenticate(req.body.email, req.body.passwordDigest, function (err, returningUser) {
     if (err) {
       console.log("index error: " + err);
-          res.sendStatus(500);
+      res.sendStatus(500);
     } else {
       req.session.userId = returningUser.id;
       res.json(returningUser);
@@ -115,7 +115,7 @@ app.post('/login', function (req, res) {
 
 //use session
 app.post('/sessions', (req, res) => {
-	db.User.authenticate(req.body.email, req.body.password, function (err, loggedInUser) {
+	db.User.authenticate(req.body.email, req.body.passwordDigest, function (err, loggedInUser) {
 		if (err) {
 		console.log('authentication error: ', err);
 		res.status(500).send();

@@ -23,7 +23,7 @@ console.log("yea!");
 		e.preventDefault();
 		  var loginData = {
         email: $("#email-input").val(),
-        password: $('#password-input').val(),
+        passwordDigest: $('#password-input').val(),
       };
   			console.log(loginData);
   	 	$.ajax({
