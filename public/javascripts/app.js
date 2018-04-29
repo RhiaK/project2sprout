@@ -1,34 +1,32 @@
 $(document).ready(function(){
 console.log("yea!");
-let $locList;
-let allLocs = [];
 //signup
-	$("#signup-form").on("submit", function(e){
-		e.preventDefault();
-		  var signupData = {
+  $("#signup-form").on("submit", function(e){
+    e.preventDefault();
+      var signupData = {
         email: $("#email-input").val(),
         passwordDigest: $('#password-input').val(),
         child: $('#childName-input').val(),
         ppphone: $('#ppphone-input').val()
       };
         console.log(signupData);
-  	 	$.ajax({
+      $.ajax({
         method: 'POST',
         url: '/signup',
         data: signupData,
         success: signupSuccess,
         error: signupError
       });
-	});
+  });
 //login
-	$("#login-form").on("submit", function(e){
-		e.preventDefault();
-		  var loginData = {
+  $("#login-form").on("submit", function(e){
+    e.preventDefault();
+      var loginData = {
         email: $("#email-input").val(),
         passwordDigest: $('#password-input').val(),
       };
-  			console.log(loginData);
-  	 	$.ajax({
+        console.log(loginData);
+      $.ajax({
         method: 'POST',
         url: '/login',
         data: loginData,
@@ -58,12 +56,12 @@ let allLocs = [];
       alert('Error logging in, please try again')
     }
 //send text message
-  $("#arrived").on("submit", function(e){
+  $("#arrived").on("click", function(e){
     e.preventDefault();
     //twilio send message
       let msgData = {
-        name: './models/User.Name',
-        loc: './models/User.Loc'
+        name: './models/User.name',
+        loc: './models/User.loc'
       }
     $.ajax({
       method: 'POST',
@@ -75,45 +73,54 @@ let allLocs = [];
 
   })
 
-  $locList = $('#target');
+
+let $locList = $('#target');
+let allLocs = [];
+
  
   $.ajax({
     method: 'GET', //getting all of the data from database
-    url: '/profile/loc', //on this url
+    url: '/profile/user', //on this url
     success: handleSuccess, //calls handleSuccess on success
     error: handleError //throws error on error
   });
 
-  $("#newLoc").on('submit', function(e) {
+  $(".mbutt").on('click', function(e) {
     e.preventDefault();
     $.ajax({
-      method: 'POST', //post method
-      url: '/profile/loc', //url to post on
-      data: $('#newLoc').serialize(), //serializing the form object
+      method: 'PUT', 
+      url: '/profile', 
+      data: $('.newLoc').val(), 
       success: newLocSuccess,
       error: newLocError
     });
+  $('.mbody').modal('toggle');
+    return false;
   });
 
   $locList.on('click', '.deleteBtn', function() {
     console.log('clicked delete button to, /profile/loc/' + $(this).attr('data-id'))
     $.ajax({
-      method: 'DELETE',
-      url: '/profile/loc/'+$(this).attr('data-id'),
+      method: 'PUT',
+      url: '/userRemoveLoc',
       success: deleteLocSuccess,
       error: deleteLocError
     });
+  $('.crud').modal('toggle');
+    return false;
   });
 
   $locList.on('click', '.updateBtn', function() {
     console.log('clicked update button to,  /loc/'+$(this).attr('data-id'));
     $.ajax({
       method: 'PUT',
-      url: '/loc/'+$(this).attr('data-id'),
-      data: $('#newLoc').serialize(),
+      url: '/loc/'+ $(this).attr('data-id'),
+      data: $('.newLoc').val(),
       success: updateLocSuccess,
       error: updateLocError
     });
+  $('.crud').modal('toggle');
+    return false;
   });
 
   function getLocHtml(locList) {
@@ -123,13 +130,14 @@ let allLocs = [];
   }
 
   function getAllLocHtml(loc) {
-  return loc.map(getLocHtml).join("");
+    return loc.map(getLocHtml).join("");
+  }  
   //function to render all locations to view
   function render () {
-  // $locList.empty();// empty existing posts from view
+    $locList.empty();// empty existing posts from view
     var locHtml = getAllLocHtml(allLocs); // pass `allLocs` into the template function
     $locList.append(locHtml);// append html to the view
-  }};
+  };
 
   function handleSuccess(json) {
     allLocs = json;//assigning the value of the json object into the empty array
@@ -140,6 +148,17 @@ let allLocs = [];
   function handleError(e) {
     console.log('uh oh');
     $('#target').text('Failed to load locations');
+  }
+
+  function msgSuccess(json) {
+    let phone = db.User.ppphone;
+    let msg = (db.User.name + " has arrived at " + db.User.loc)
+    render(client.messages)
+  }
+
+  function msgError(e) {
+    console.log("message error");
+    alert("Failed to send message");
   }
 
   function newLocSuccess(json) {

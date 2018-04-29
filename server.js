@@ -105,6 +105,7 @@ app.post('/signup', function (req, res) {
     }
   });
 });
+
 //login
 app.post('/login', function (req, res) {
   db.User.authenticate(req.body.email, req.body.passwordDigest, function (err, returningUser) {
@@ -118,61 +119,85 @@ app.post('/login', function (req, res) {
   });
 });
 
-// //use session
-// app.post('/sessions', (req, res) => {
-// 	db.User.authenticate(req.body.email, req.body.passwordDigest, function (err, loggedInUser) {
-// 		if (err) {
-// 		console.log('authentication error: ', err);
-// 		res.status(500).send();
+
+//SHOW PROFILE PAGE for user in session
+app.get('/profile', function (req, res) {
+  db.User.findOne({_id: req.session.userId}, function (err, currentUser) {
+    res.render('profile.ejs', {user: currentUser});
+  });
+});
+
+// //profile
+// app.get('/profile/user', function (req, res) {
+// 	db.User.findOne({_id: req.session.userId}, function (err, currentUser) {
+// 		if (err){
+// 			res.redirect('/login');
 // 		} else {
-// 		console.log('setting session user id ', loggedInUser._id);
-// 		req.session.userId = loggedInUser._id;
-// 		res.redirect('/profile');
+// 			res.render ('profile', {user:currentUser});
 // 		}
-			
 // 	});
 // });
 
-//profile
-app.get('/profile', function (req, res) {
-	db.User.findOne({_id: req.session.userId}, function (err, currentUser) {
-		if (err){
-			res.redirect('/login');
-		} else {
-			res.render ('profile', {user:currentUser});
-		}
-	});
-});
-
-//this route works with my ajax get to display the seeded data on the dom
-app.get('profile/:id/loc', function (req, res, next) {
-    console.log('hello') 
-    db.Loc.find(function(err, loc) {
-      if (err) {
-      console.log("index error: " + err);
-        res.sendStatus(500);
-      } else {
-        res.json(loc);
-      }  
-    });
+//sends user data to view
+app.get('/profile/user', function (req, res) {
+    db.User.findOne({_id: req.session.userId}, function (err, user) {
+    if(err) {
+      console.log("user error " + err);
+      res.sendStatus(500);
+    }
+    console.log(user);
+    res.json(user);
+  });
 });
 
 //create new location
-app.post('/profile/:id/locs', function(req, res) {
-  // create new loc with form data (`req.body`)
+// app.post('/profile', function(req, res) {
+//   // create new loc with form data (`req.body`)
+//   var newLoc = req.body;
+//     db.User.create(newLoc, function(err, newLocItem){
+//       if (err) {
+//         console.log("index error: " + err)
+//         res.sendStatus(500)  
+//       } else {
+//       //executed only in the success case, where there's no error
+//         res.json(newLocItem);  
+//       }
+//     });
+// });
+
+app.put('/profile', function (req,res) {
   var newLoc = req.body;
-    db.User.create(newLoc, function(err, newLocItem){
+  db.User.findOneAndUpdate(
+    {_id: req.session.userId},
+    { $push: {'loc.locList': newLoc}},
+    {new:true},
+    function (err, doc) {
       if (err) {
-        console.log("index error: " + err)
-        res.sendStatus(500)  
+        console.log("can't add new location to user");
       } else {
-      //executed only in the success case, where there's no error
-        res.json(newLocItem);  
+        res.json(doc);
       }
-    });
+    }
+  );
 });
 
 // // delete loc
+
+app.put('/userRemoveLoc', function (req, res) {
+
+  db.User.findOneAndUpdate(
+    {_id: req.session.userId},
+    { $pull: {'loc.locDoc': {_id: req.body.removedLoc}}},
+    { new: true},
+    function (err, updatedLocsArray) {
+      if (err) {
+        console.log("can't remove location from user!");
+      } else {
+        res.json(updatedLocsArray);
+      }
+    }
+  );
+});
 // app.delete('/profile/:id/loc/:id', function (req, res) {
 //   // get to do id from url params (`req.params`)
 //   let locToDelete = req.params.id;
@@ -226,8 +251,8 @@ app.get('/logout', (req,res) => {
 
 //twilio send message
 function send() {
-  let phone = db.User.ppphone;
-  let msg = (db.User.name + " has arrived at " + db.User.loc)
+  // let phone = db.User.ppphone;
+  // let msg = (db.User.name + " has arrived at " + db.User.loc)
 
 client.messages
   .create({
