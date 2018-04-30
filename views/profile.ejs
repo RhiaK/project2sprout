@@ -35,18 +35,25 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-          <div class="modal-body">
-            <form id="uds">
-              <input type="text" name="input" class="form-control newloc" placeholder="Location" autofocus>
-          </div>
-          <div class="modal-footer">
-            <button type="button" name="input" id="selectB" class="btn btn-primary mbutt">Select</button>
-            <button type="button" name="input" id="updateB" class="btn btn-primary cbutt updateBtn">Update</button>
-            <button type="button" name="input" class="btn btn-secondary cbutt deleteBtn" id="deleteB">Delete</button>
+            <div class="modal-body">
+              <form id="uds">
+                <input type="text" name="inputuds" class="form-control newloc" placeholder="Location" autofocus>
+                <div class="modal-footer">
+                  <button type="button" name="inputuds" id="updateB" class="btn btn-primary cbutt updateBtn">Update</button>
+                </div>
+              </form> 
+              <div class="row justify-content-center">
+              <form id="sel">
+                  <button type="button" name="inputuds" id="selectB" class="btn btn-primary mbutt">Select</button>
+              </form>
+              <form id="del">
+                  <button type="button" name="inputuds" class="btn btn-secondary cbutt deleteBtn" id="deleteB">Delete</button>
+              </form>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
       <div class="modal mbody" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -56,15 +63,15 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-          <form id="addlocs">
             <div class="modal-body">
-             <input type="text" name="input" class="form-control newLoc" placeholder="Location" autofocus>
-            </div>
-          <div class="modal-footer">
-            <button id="addlocsubmit" type="submit" name="input" class="btn btn-primary mbutt">Save New Location</button>
-            <button type="button" class="btn btn-secondary cbutt" data-dismiss="modal">Close</button>
-          </form>
-          </div>
+              <form id="addlocs" name="input">
+                <input type="text" name="input" class="form-control newLoc" placeholder="Location" autofocus>
+                <div class="modal-footer">
+                <button id="addlocsubmit" type="submit" name="input" class="btn btn-primary mbutt">Save New Location</button>
+                <button type="button" class="btn btn-secondary cbutt" data-dismiss="modal">Close</button>
+                </div>
+              </form>
+            </div><!-- closes modal body  -->
         </div>
       </div>
     </div>

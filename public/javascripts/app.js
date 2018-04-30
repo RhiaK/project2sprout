@@ -86,20 +86,23 @@ console.log("yea!");
     error: handleError //throws error on error
   });
 
-  $(".mbutt").on('submit', function(e) {
+  $(document).on('submit', "#addlocs", function(e) {
     e.preventDefault();
+    let location = $('#addlocs').serialize().split('=').pop();
+    console.log(location);
+
     $.ajax({
       method: 'PUT', 
       url: '/profile', 
-      data: $('.newLoc').serialize(), 
+      data: {loc: location}, 
       success: newLocSuccess,
       error: newLocError
     });
-  $('.mbody').modal('toggle');
+    $('.mbody').modal('toggle');
     return false;
   });
 
-  $locList.on('submit', '#deleteB', function() {
+  $locList.on('submit', '#del', function() {
     console.log('clicked delete button to, /loc/' + $(this).attr('data-id'))
     $.ajax({
       method: 'PUT',
@@ -112,7 +115,7 @@ console.log("yea!");
     return false;
   });
 
-  $locList.on('submit', '#updateB', function() {
+  $locList.on('submit', '#uds', function() {
     console.log('clicked update button to,  /loc/'+$(this).attr('data-id'));
     $.ajax({
       method: 'PUT',
@@ -127,7 +130,7 @@ console.log("yea!");
 
   function getLocHtml(locList) {
   return `<a class="dropdown-item location" data-toggle="modal" data-target=".crud">
-            <b>${locList.input}</b>
+            <b>${locList.loc}</b>
           </a>`;
   };
 

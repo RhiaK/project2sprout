@@ -148,6 +148,7 @@ app.get('/profile/user', function (req, res) {
 
 //create
 app.put('/profile', function (req,res) {
+  console.log(req.body);
   var newLoc = req.body;
   db.User.findOneAndUpdate(
     {_id: req.session.userId},

@@ -5,6 +5,4 @@ Sprout is an app that allows parents to stay informed about their child's wherab
 I used HTML/EJS, CSS/Bootstrap, node.js, javascript, mongo, mongoose, and heroku to create this app.
 
 Problems:
-I am having trouble accessing locs as a part of the users db object, because of this I cannot accomplish any of the crud operations.
-
-I am unable to access db info on front to send message
+I am having trouble with the path of the name of the object being added to the user as a location.
