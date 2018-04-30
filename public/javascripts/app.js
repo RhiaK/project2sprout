@@ -57,23 +57,22 @@ console.log("yea!");
     function loginError () {
       alert('Error logging in, please try again')
     }
-//send text message
-  $("#arrived").on("click", function(e){
-    e.preventDefault();
-    //twilio send message
-      let msgData = {
-        name: './models/User.name',
-        loc: './models/User.loc'
-      }
-    $.ajax({
-      method: 'POST',
-      url: '/msg',
-      data: msgData,
-      success: msgSuccess,
-      error: msgError
-      });
-
-  })
+// //send text message
+//   $("#arrived").on("click", function(e){
+//     e.preventDefault();
+//     //twilio send message
+//       let msgData = {
+//         name: './models/User.name',
+//         loc: './models/User.loc'
+//       }
+//     $.ajax({
+//       method: 'POST',
+//       url: '/msg',
+//       data: msgData,
+//       success: msgSuccess,
+//       error: msgError
+//     });
+//   });
 
 
   let $locList = $('#target');
@@ -82,17 +81,16 @@ console.log("yea!");
  
   $.ajax({
     method: 'GET', //getting all of the data from database
-    url: '/locs', //on this url
+    url: '/profile/user', //on this url
     success: handleSuccess, //calls handleSuccess on success
     error: handleError //throws error on error
   });
 
   $(".mbutt").on('submit', function(e) {
     e.preventDefault();
-    console.log('#addlocs');
     $.ajax({
-      method: 'POST', 
-      url: '/locs', 
+      method: 'PUT', 
+      url: '/profile', 
       data: $('.newLoc').serialize(), 
       success: newLocSuccess,
       error: newLocError
@@ -101,11 +99,12 @@ console.log("yea!");
     return false;
   });
 
-  $locList.on('click', '.deleteB', function() {
+  $locList.on('submit', '#deleteB', function() {
     console.log('clicked delete button to, /loc/' + $(this).attr('data-id'))
     $.ajax({
-      method: 'DELETE',
-      url: '/loc/' +$(this).attr('data-id'),
+      method: 'PUT',
+      url:'/userRemoveLoc',
+      data: {removedLoc: +$(this).attr('data-id')},
       success: deleteLocSuccess,
       error: deleteLocError
     });
@@ -113,7 +112,7 @@ console.log("yea!");
     return false;
   });
 
-  $locList.on('click', '.updateB', function() {
+  $locList.on('submit', '#updateB', function() {
     console.log('clicked update button to,  /loc/'+$(this).attr('data-id'));
     $.ajax({
       method: 'PUT',
@@ -127,10 +126,10 @@ console.log("yea!");
   });
 
   function getLocHtml(locList) {
-  return `<a class="dropdown-item" data-toggle="modal" data-target=".crud">
+  return `<a class="dropdown-item location" data-toggle="modal" data-target=".crud">
             <b>${locList.input}</b>
           </a>`;
-  }
+  };
 
   // var getAllLocHtml = allLocs.map (function (loc) {
   //       for (var i = 0; i < item.length; i++) {
@@ -139,86 +138,95 @@ console.log("yea!");
   // })  
   function getAllLocsHtml(loc) {
     return loc.map(getLocHtml).join("");
-  }
+  };
   //function to render all locations to view
   function render () {
     $locList.empty();// empty existing posts from view
-    var locsHtml = getAllLocsHtml(allLocs); // pass allLocs into the template function
-    $locList.append(locsHtml);// append html to the view
+    var locHtml = getAllLocsHtml(allLocs); // pass allLocs into the template function
+    $locList.append(locHtml);// append html to the view
   };
 
   function handleSuccess(json) {
-    allLocs = json;//assigning the value of the json object into the empty array
-    if (allLocs.length > 0) {
-    render();
-    } else {
-    console.log('needs to add locations');
-    $('#target').text('Please add a location');  
-    }
-  }
+    console.log(json);
+    allLocs = json.loc;//assigning the value of the json object into the empty array
+      if (allLocs.length > 0) {
+        render();
+      } else {
+        console.log('needs to add locations');
+        $('#target').text('Please add a location');  
+      }
+  };
 
   function handleError(e) {
     if (allLocs.length > 0) {
-    console.log('uh oh');
-    $('#target').text('Failed to load locations');
+      console.log('uh oh');
+      $('#target').text('Failed to load locations');
     } else {
-    console.log('needs to add locs');
-    $('#target').text('Please add a location');  
+      console.log('needs to add locs');
+      $('#target').text('Please add a location');  
     } 
-  }
+  };
 
-  function msgSuccess(json) {
-    let phone = db.User.ppphone;
-    let msg = (db.User.name + " has arrived at " + db.User.loc)
-    render(client.messages)
-  }
+  $("#selectB").on('submit', function(e) {
+    e.preventDefault();
+      render(location);
+    $('.crud').modal('toggle');
+      return false;
+  });
+
+  $('#arrived').on('submit', function(e) {
+    e.preventDefault();
+    function msgSuccess(json) {
+      render(client.messages)
+    }
+   }); 
 
   function msgError(e) {
     console.log("message error");
     alert("Failed to send message");
-  }
+  };
 
   function newLocSuccess(json) {
-    $('#addlocs input').val(''); //clearing the input fields after successful post
-    console.log(json);
-    allLocs.push(json); //pushing all data from the array into json
-    render();
-  }
+    $('#addlocs').val(''); //clearing the input fields after successful post
+      allLocs = json.loc;
+      console.log(json.loc); //pushing all data from the array into json
+        render();
+  };
 
   function newLocError() {
     console.log('new location error!');
-  }
+  };
 
   function deleteLocSuccess(json) {
     var locId = json;
-    console.log('delete loc', locId);
+      console.log('delete loc', locId);
     // find the loc with the correct ID and remove it from our allLocs array
     for(var index = 0; index < allLocs.length; index++) {
       if(allLocs[index]._id === locId) {
        allLocs.splice(index, 1);
         break;  
-      }
-    }
+      };
+    };
     render();
-  }
+  };
 
   function deleteLocError() {
     console.log('delete location error!');
-  }
+  };
 
   function updateLocSuccess(json) {
-  var itemId = json._id;
-  for(var i = 0; i < allLocs.length; i++) {
-    if(allLocs[i]._id === itemId) {
-      allLocs[i].input = json.input;
-      console.log(json);
+      var itemId = json._id;
+    for(var i = 0; i < allLocs.length; i++) {
+      if(allLocs[i]._id === itemId) {
+        allLocs[i].input = json.input;
+        console.log(json);
       // break;
-      }
+      };
     render();
-    }
+    };
   };
 
   function updateLocError() {
     console.log('update location error!');
-  }
+  };
 });

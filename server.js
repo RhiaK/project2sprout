@@ -91,7 +91,7 @@ app.post('/signup', function (req, res) {
 });
 
 //login
-app.post('/login', function (req, res) {
+app.post('/sessions', function (req, res) {
   db.User.authenticate(req.body.email, req.body.passwordDigest, function (err, returningUser) {
     if (err) {
       console.log("index error: " + err);
@@ -104,12 +104,23 @@ app.post('/login', function (req, res) {
 });
 
 
-//SHOW PROFILE PAGE for user in session
-app.get('/profile', function (req, res) {
-  db.User.findOne({_id: req.session.userId}, function (err, currentUser) {
-    res.render('profile.ejs', {user: currentUser});
-  });
-});
+
+// //SHOW PROFILE PAGE for user in session
+// app.get('/profile', function (req, res) {
+//   db.User.findOne({_id: req.session.userId}, function (err, currentUser) {
+//     res.render('profile.ejs', {user: currentUser});
+//   });
+// });
+
+// app.session = function(req, res) {
+//   db.User.authenticate(req.body.email, req.body.password, function (err, existingUser){
+//     if (err) {
+//       console.log(error);
+//     }
+//     req.session.userId = existingUser._id;
+//     res.json(existingUser);
+//   })
+
 
 // //profile
 // app.get('/profile/user', function (req, res) {
@@ -124,41 +135,25 @@ app.get('/profile', function (req, res) {
 
 //sends user data to view
 app.get('/profile/user', function (req, res) {
-    db.User.find(function (err, user) {
+    db.User.findOne({_id: req.session.userId}, function (err, user) {
     if(err) {
       console.log("user error " + err);
       res.sendStatus(500);
-    }
+    } else {
     console.log(user);
+    }
     res.json(user);
   });
 });
 
-
-app.get('/locs', function (req, res){
-  console.log('hello');
-  db.User.find(function(err, myloc){
-    res.json(myloc);
-  });
-});
-//create new location
-// app.post('/profile', function(req, res) {
-//   // create new loc with form data (`req.body`)
-//   var newLoc = req.body;
-//     db.User.create(newLoc, function(err, newLocItem){
-//       if (err) {
-//         console.log("index error: " + err)
-//         res.sendStatus(500)  
-//       } else {
-//       //executed only in the success case, where there's no error
-//         res.json(newLocItem);  
-//       }
-//     });
-// });
-
-app.post('/locs', function (req,res) {
+//create
+app.put('/profile', function (req,res) {
   var newLoc = req.body;
-  db.User.create(newLoc, function (err, myloc) {
+  db.User.findOneAndUpdate(
+    {_id: req.session.userId},
+    {$push: {loc: newLoc}},
+    {new: true},
+    function (err, myloc) {
       if (err) {
         console.log("can't add new location to user");
       } else {
@@ -167,55 +162,48 @@ app.post('/locs', function (req,res) {
   });
 });
 
-// update loc
 
-app.put('/loc/:id', function (req, res) {
-  console.log(req.params.id);
-  let input = req.body.input;
-  db.User.findOneAndUpdate(
-    {_id: req.params.id}, {$set:{input: input}}, {new: true},
-    function (err, update) {
+// app.get('/loc', function (req, res){
+//   console.log('hello');
+//   db.User.find(function(err, myloc){
+//     res.json(myloc);
+//   });
+// });
+
+// // update loc
+// app.put('/loc/:id', function (req, res) {
+//   console.log(req.params.id);
+//   let input = req.body.input;
+//   db.User.findOneAndUpdate(
+//     {_id: req.params.id}, {$set:{input: input}}, {new: true},
+//     function (err, update) {
+//       if (err) {
+//         console.log("can't update location");
+//       } else {
+//         console.log(update);
+//         res.json(update);
+//       }
+//     }
+//   );
+// });
+
+//delete
+app.put('/userRemoveLoc', function (req, res) {
+
+  User.findOneAndUpdate(
+    {_id: req.session.userId},
+    { $pull: {loc: {_id: req.body.removedLoc}}},
+    { new: true},
+    function (err, updatedLocationArray) {
       if (err) {
-        console.log("can't update location");
+        console.log("can't remove location from user!");
       } else {
-        console.log(update);
-        res.json(update);
+        res.json(updatedLocationArray);
       }
     }
   );
 });
 
-app.delete('/loc/:id', function (req, res) {
-  // get to do id from url params (`req.params`)
-  db.User.findOneAndRemove({_id: peq.params.id}, function(err, locs) {
-    if (err) {
-      console.log("index error: " + err);
-      res.sendStatus(500);
-    }
-    // get the id of the to do to delete
-    let locToDelete = req.params.id;
-    res.json(locToDelete);
-  });
-})
-
-// // update loc list item
-// app.put('/profile/:id/loc/:id', function(req,res){
-//   console.log(req.params.id);
-//   let loc1 = req.body.loc1;
-//   console.log(loc1);
-
-//   db.User.findOneAndUpdate(
-//       {_id: req.params.id}, {$set:{loc: loc1}}, {new: true}, function (err, update) {
-//         if (err) {
-//       console.log("index error: " + err);
-//       res.sendStatus(500);
-//         } else {
-//       //doc is the json object that is being sent (refer to 'json' callback in JS functions)
-//       console.log(update);
-//       res.json(update);
-//       }
-//   });
-// });
 
 //logout
 app.get('/logout', (req,res) => {
@@ -224,31 +212,22 @@ app.get('/logout', (req,res) => {
 	res.redirect('/login');
 });
 
-//login view
-// //protected login
-// app.get('/protected', (req, res) => {
-// 	console.log(req.session);
-// 	if(!req.session.user) {
-// 		return res.status(401).send('Sorry, you are not allowed, please sign in');
-// 	} else {
-// 		return res.status(200).send('Welcome to the protected area');
-// 	}	
-// });
-
-
 //twilio send message
-function send() {
-  // let phone = db.User.ppphone;
-  // let msg = (db.User.name + " has arrived at " + db.User.loc)
+//need to access user ppphone and name from signed in user (front end?)
+//need to activate msg send with arrived button
+// db.User.find(ppphone, name);
+// function send() {
+//   let phone = db.User.ppphone;
+//   let msg = (db.User.name + " has arrived at ")
 
-client.messages
-  .create({
-    to: phone,
-    from: '+17197223736',
-    body: msg
-  })
-  .then(message => console.log(message.sid));
-};
+// client.messages
+//   .create({
+//     to: phone,
+//     from: '+17197223736',
+//     body: msg
+//   })
+//   .then(message => console.log(message.sid));
+// };
 
 
 // error handler
