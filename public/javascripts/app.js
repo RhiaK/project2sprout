@@ -1,3 +1,5 @@
+let allLocs = [];
+
 $(document).ready(function(){
 console.log("yea!");
 //signup
@@ -74,23 +76,24 @@ console.log("yea!");
   })
 
 
-let $locList = $('#target');
-let allLocs = [];
+  let $locList = $('#target');
+  console.log($locList);
 
  
   $.ajax({
     method: 'GET', //getting all of the data from database
-    url: '/profile/user', //on this url
+    url: '/locs', //on this url
     success: handleSuccess, //calls handleSuccess on success
     error: handleError //throws error on error
   });
 
-  $(".mbutt").on('click', function(e) {
+  $(".mbutt").on('submit', function(e) {
     e.preventDefault();
+    console.log('#addlocs');
     $.ajax({
-      method: 'PUT', 
-      url: '/profile', 
-      data: $('.newLoc').val(), 
+      method: 'POST', 
+      url: '/locs', 
+      data: $('.newLoc').serialize(), 
       success: newLocSuccess,
       error: newLocError
     });
@@ -98,11 +101,11 @@ let allLocs = [];
     return false;
   });
 
-  $locList.on('click', '.deleteBtn', function() {
-    console.log('clicked delete button to, /profile/loc/' + $(this).attr('data-id'))
+  $locList.on('click', '.deleteB', function() {
+    console.log('clicked delete button to, /loc/' + $(this).attr('data-id'))
     $.ajax({
-      method: 'PUT',
-      url: '/userRemoveLoc',
+      method: 'DELETE',
+      url: '/loc/' +$(this).attr('data-id'),
       success: deleteLocSuccess,
       error: deleteLocError
     });
@@ -110,12 +113,12 @@ let allLocs = [];
     return false;
   });
 
-  $locList.on('click', '.updateBtn', function() {
+  $locList.on('click', '.updateB', function() {
     console.log('clicked update button to,  /loc/'+$(this).attr('data-id'));
     $.ajax({
       method: 'PUT',
       url: '/loc/'+ $(this).attr('data-id'),
-      data: $('.newLoc').val(),
+      data: $('.newloc').serialize(),
       success: updateLocSuccess,
       error: updateLocError
     });
@@ -125,29 +128,43 @@ let allLocs = [];
 
   function getLocHtml(locList) {
   return `<a class="dropdown-item" data-toggle="modal" data-target=".crud">
-            Location <b>${locList.loc}</b>
+            <b>${locList.input}</b>
           </a>`;
   }
 
-  function getAllLocHtml(loc) {
+  // var getAllLocHtml = allLocs.map (function (loc) {
+  //       for (var i = 0; i < item.length; i++) {
+  //           new getLoc(item[i]);
+  //       };
+  // })  
+  function getAllLocsHtml(loc) {
     return loc.map(getLocHtml).join("");
-  }  
+  }
   //function to render all locations to view
   function render () {
     $locList.empty();// empty existing posts from view
-    var locHtml = getAllLocHtml(allLocs); // pass `allLocs` into the template function
-    $locList.append(locHtml);// append html to the view
+    var locsHtml = getAllLocsHtml(allLocs); // pass allLocs into the template function
+    $locList.append(locsHtml);// append html to the view
   };
 
   function handleSuccess(json) {
     allLocs = json;//assigning the value of the json object into the empty array
-    if (allLocs > 0) {
+    if (allLocs.length > 0) {
     render();
-  }}
+    } else {
+    console.log('needs to add locations');
+    $('#target').text('Please add a location');  
+    }
+  }
 
   function handleError(e) {
+    if (allLocs.length > 0) {
     console.log('uh oh');
     $('#target').text('Failed to load locations');
+    } else {
+    console.log('needs to add locs');
+    $('#target').text('Please add a location');  
+    } 
   }
 
   function msgSuccess(json) {
@@ -162,7 +179,7 @@ let allLocs = [];
   }
 
   function newLocSuccess(json) {
-    $('#newLoc input').val(''); //clearing the input fields after successful post
+    $('#addlocs input').val(''); //clearing the input fields after successful post
     console.log(json);
     allLocs.push(json); //pushing all data from the array into json
     render();
@@ -193,8 +210,7 @@ let allLocs = [];
   var itemId = json._id;
   for(var i = 0; i < allLocs.length; i++) {
     if(allLocs[i]._id === itemId) {
-      allLocs[i].task = json.task;
-      allLocs[i].description = json.description;
+      allLocs[i].input = json.input;
       console.log(json);
       // break;
       }

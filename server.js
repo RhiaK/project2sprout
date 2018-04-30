@@ -43,22 +43,6 @@ app.use(session({
 // app.use(function(req, res, next) {
 //   next(createError(404));
 // });
-// app.get('/', (req, res) => {
-//   res.render('index');
-// });
-
-
-
-// app.get('/', function (req, res) {
-//   db.User.find({}, function(err, allUsers){
-//     if(allUsers){
-//       res.render('index.ejs', { users: allUsers });
-//     } else {
-//       res.status(500).send('server error');
-//     }
-//   });
-// });
-
 
 //index
 app.get('/', (req, res) => {
@@ -77,8 +61,8 @@ app.get('/profile', (req, res) => {
   res.render('profile');
 });
 
-app.get('/profile/loc', (req, res) => {
-  res.render('loc');
+app.get('/profile/locs', (req, res) => {
+  res.json(db.User.Loc);
 });
 
 // app.post('/users', function (req, res) {
@@ -129,18 +113,18 @@ app.get('/profile', function (req, res) {
 
 // //profile
 // app.get('/profile/user', function (req, res) {
-// 	db.User.findOne({_id: req.session.userId}, function (err, currentUser) {
-// 		if (err){
-// 			res.redirect('/login');
-// 		} else {
-// 			res.render ('profile', {user:currentUser});
-// 		}
-// 	});
+//  db.User.findOne({_id: req.session.userId}, function (err, currentUser) {
+//    if (err){
+//      res.redirect('/login');
+//    } else {
+//      res.render ('profile', {user:currentUser});
+//    }
+//  });
 // });
 
 //sends user data to view
 app.get('/profile/user', function (req, res) {
-    db.User.findOne({_id: req.session.userId}, function (err, user) {
+    db.User.find(function (err, user) {
     if(err) {
       console.log("user error " + err);
       res.sendStatus(500);
@@ -150,6 +134,13 @@ app.get('/profile/user', function (req, res) {
   });
 });
 
+
+app.get('/locs', function (req, res){
+  console.log('hello');
+  db.User.find(function(err, myloc){
+    res.json(myloc);
+  });
+});
 //create new location
 // app.post('/profile', function(req, res) {
 //   // create new loc with form data (`req.body`)
@@ -165,51 +156,47 @@ app.get('/profile/user', function (req, res) {
 //     });
 // });
 
-app.put('/profile', function (req,res) {
+app.post('/locs', function (req,res) {
   var newLoc = req.body;
-  db.User.findOneAndUpdate(
-    {_id: req.session.userId},
-    { $push: {'loc.locList': newLoc}},
-    {new:true},
-    function (err, doc) {
+  db.User.create(newLoc, function (err, myloc) {
       if (err) {
         console.log("can't add new location to user");
       } else {
-        res.json(doc);
-      }
-    }
-  );
+        res.json(myloc);
+      }  
+  });
 });
 
-// // delete loc
+// update loc
 
-app.put('/userRemoveLoc', function (req, res) {
-
+app.put('/loc/:id', function (req, res) {
+  console.log(req.params.id);
+  let input = req.body.input;
   db.User.findOneAndUpdate(
-    {_id: req.session.userId},
-    { $pull: {'loc.locDoc': {_id: req.body.removedLoc}}},
-    { new: true},
-    function (err, updatedLocsArray) {
+    {_id: req.params.id}, {$set:{input: input}}, {new: true},
+    function (err, update) {
       if (err) {
-        console.log("can't remove location from user!");
+        console.log("can't update location");
       } else {
-        res.json(updatedLocsArray);
+        console.log(update);
+        res.json(update);
       }
     }
   );
 });
-// app.delete('/profile/:id/loc/:id', function (req, res) {
-//   // get to do id from url params (`req.params`)
-//   let locToDelete = req.params.id;
-//   db.Loc.findOneAndRemove({_id: req.params.id}, function(err, locs) {
-//     if (err) {
-//       console.log("index error: " + err);
-//       res.sendStatus(500);
-//     }
-//     // get the id of the to do to delete
-//     res.json(locToDelete);
-//   });
-// })
+
+app.delete('/loc/:id', function (req, res) {
+  // get to do id from url params (`req.params`)
+  db.User.findOneAndRemove({_id: peq.params.id}, function(err, locs) {
+    if (err) {
+      console.log("index error: " + err);
+      res.sendStatus(500);
+    }
+    // get the id of the to do to delete
+    let locToDelete = req.params.id;
+    res.json(locToDelete);
+  });
+})
 
 // // update loc list item
 // app.put('/profile/:id/loc/:id', function(req,res){

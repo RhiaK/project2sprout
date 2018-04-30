@@ -10,7 +10,7 @@ var loc_list = [
 ];
 
 // remove all records that match {} -- which means remove ALL records
-  db.Loc.remove({}, function(err, locs){
+db.Loc.remove({}, function(err, locs){
     if(err) {
       console.log('Error occurred in remove', err);
     } else {
@@ -22,5 +22,5 @@ var loc_list = [
       console.log("created", locs.length, "locs");
       process.exit();
     });
-    }
-  });
+  }
+});
