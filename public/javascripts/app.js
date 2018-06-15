@@ -57,8 +57,10 @@ console.log("yea!");
     function loginError () {
       alert('Error logging in, please try again')
     }
-// //send text message
-//   $("#arrived").on("click", function(e){
+//send text message
+
+// const twilio = require('twilio');
+//   $("#arrived").on("submit", function(e){
 //     e.preventDefault();
 //     //twilio send message
 //       let msgData = {
@@ -111,7 +113,7 @@ console.log("yea!");
       success: deleteLocSuccess,
       error: deleteLocError
     });
-  $('.crud').modal('toggle');
+    $('.crud').modal('toggle');
     return false;
   });
 
